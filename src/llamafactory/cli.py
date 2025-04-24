@@ -83,6 +83,7 @@ def main():
         is_env_enabled("FORCE_TORCHRUN") or (get_device_count() > 1 and not use_ray())
     ):
         # launch distributed training
+        torchrun_prefix = os.getenv("TORCHRUN_PREFIX", "")
         nnodes = os.getenv("NNODES", "1")
         node_rank = os.getenv("NODE_RANK", "0")
         nproc_per_node = os.getenv("NPROC_PER_NODE", str(get_device_count()))
