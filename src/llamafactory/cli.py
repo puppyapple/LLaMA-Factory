@@ -87,21 +87,29 @@ def main():
     elif command == Command.TRAIN:
         force_torchrun = is_env_enabled("FORCE_TORCHRUN")
         if force_torchrun or (get_device_count() > 1 and not use_ray()):
+            torchrun_prefix = os.getenv("TORCHRUN_PREFIX", "")
+            if torchrun_prefix and not torchrun_prefix.endswith("/"):
+                torchrun_prefix += "/"
             nnodes = os.getenv("NNODES", "1")
             node_rank = os.getenv("NODE_RANK", "0")
             nproc_per_node = os.getenv("NPROC_PER_NODE", str(get_device_count()))
             master_addr = os.getenv("MASTER_ADDR", "127.0.0.1")
             master_port = os.getenv("MASTER_PORT", str(find_available_port()))
-            logger.info_rank0(f"Initializing {nproc_per_node} distributed tasks at: {master_addr}:{master_port}")
+            logger.info_rank0(
+                f"Initializing {nproc_per_node} distributed tasks at: {master_addr}:{master_port}"
+            )
             if int(nnodes) > 1:
-                print(f"Multi-node training enabled: num nodes: {nnodes}, node rank: {node_rank}")
+                print(
+                    f"Multi-node training enabled: num nodes: {nnodes}, node rank: {node_rank}"
+                )
 
             process = subprocess.run(
                 (
-                    "torchrun --nnodes {nnodes} --node_rank {node_rank} --nproc_per_node {nproc_per_node} "
+                    "{torchrun_prefix}torchrun --nnodes {nnodes} --node_rank {node_rank} --nproc_per_node {nproc_per_node} "
                     "--master_addr {master_addr} --master_port {master_port} {file_name} {args}"
                 )
                 .format(
+                    torchrun_prefix=torchrun_prefix,
                     nnodes=nnodes,
                     node_rank=node_rank,
                     nproc_per_node=nproc_per_node,

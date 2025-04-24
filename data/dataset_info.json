@@ -1,4 +1,28 @@
 {
+  "docgnome": {
+    "file_name": "docgnome/layout/train_v4/",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "conversations",
+      "images": "images"
+    }
+  },
+  "cdla": {
+    "file_name": "cdla/train.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "conversations",
+      "images": "images"
+    }
+  },
+  "docsynth300k": {
+    "file_name": "docsynth300k/docsynth300k_train.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "conversations",
+      "images": "images"
+    }
+  },
   "identity": {
     "file_name": "identity.json"
   },
